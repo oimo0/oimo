@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="oimoの個人ホームページ。ASRO、Asra、プロジェクトを紹介します。">
+  <title>oimo | Personal Site</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --background: #ffffff;
+      --surface: #f7f8fb;
+      --line: #e6e9f0;
+      --text: #151724;
+      --muted: #667085;
+      --blue: #4f7df9;
+      --purple: #8b5cf6;
+      --gradient: linear-gradient(135deg, #4f7df9, #8b5cf6);
+      --shadow: 0 18px 55px rgba(38, 55, 122, .12);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--text);
+      background: var(--background);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body.is-locked { overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { border: 0; }
+    img { display: block; max-width: 100%; }
+
+    .progress {
+      position: fixed;
+      z-index: 5000;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: var(--gradient);
+    }
+
+    .site-header {
+      position: fixed;
+      z-index: 1000;
+      top: 0;
+      right: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 76px;
+      padding: 0 clamp(18px, 6vw, 88px);
+      border-bottom: 1px solid rgba(230, 233, 240, .72);
+      background: rgba(255, 255, 255, .78);
+      backdrop-filter: blur(16px) saturate(150%);
+      transition: height .25s, box-shadow .25s;
+    }
+    .site-header.compact {
+      height: 60px;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, .04);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-name {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -.8px;
+      color: transparent;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+    .brand-label {
+      padding-left: 10px;
+      border-left: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .desktop-nav { display: flex; gap: 28px; }
+    .desktop-nav a {
+      position: relative;
+      padding: 6px 0;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .desktop-nav a::after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      border-radius: 4px;
+      background: var(--gradient);
+      content: "";
+      transition: width .25s;
+    }
+    .desktop-nav a:hover,
+    .desktop-nav a.is-active { color: var(--text); }
+    .desktop-nav a:hover::after,
+    .desktop-nav a.is-active::after { width: 100%; }
+    .menu-button {
+      display: none;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      color: var(--text);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 20px;
+    }
+    .mobile-nav { display: none; }
+
+    .hero {
+      position: relative;
+      display: grid;
+      min-height: 100svh;
+      place-items: center;
+      overflow: hidden;
+      padding: 130px 20px 92px;
+      text-align: center;
+    }
+    .hero::before {
+      position: absolute;
+      width: min(760px, 110vw);
+      height: min(760px, 110vw);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(79, 125, 249, .12), rgba(139, 92, 246, .04) 45%, transparent 70%);
+      content: "";
+      filter: blur(10px);
+    }
+    .hero-content {
+      position: relative;
+      max-width: 820px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 27px;
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .85);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .eyebrow-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gradient);
+      box-shadow: 0 0 0 4px rgba(79, 125, 249, .12);
+    }
+    h1 {
+      margin: 0 0 24px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(4.1rem, 12vw, 9.5rem);
+      font-weight: 700;
+      line-height: .9;
+      letter-spacing: -6px;
+    }
+    .gradient-text {
+      color: transparent;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+    .byline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 25px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+    }
+    .byline::before,
+    .byline::after {
+      width: 28px;
+      height: 1px;
+      background: var(--line);
+      content: "";
+    }
+    .byline img {
+      width: 67px;
+      height: 23px;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+    }
+    .hero-description {
+      max-width: 650px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.16rem);
+      line-height: 1.85;
+    }
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 35px;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 23px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .button:hover {
+      box-shadow: var(--shadow);
+      transform: translateY(-3px);
+    }
+    .button.primary {
+      border: 0;
+      color: #fff;
+      background: var(--gradient);
+      box-shadow: 0 10px 24px rgba(79, 125, 249, .25);
+    }
+    .scroll-cue {
+      position: absolute;
+      bottom: 25px;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .scroll-cue::after {
+      display: block;
+      width: 1px;
+      height: 29px;
+      margin: 8px auto 0;
+      background: linear-gradient(var(--blue), transparent);
+      content: "";
+    }
+
+    section { padding: 120px clamp(18px, 6vw, 88px); }
+    .section-heading {
+      max-width: 660px;
+      margin: 0 auto 55px;
+      text-align: center;
+    }
+    .section-label {
+      color: transparent;
+      background: var(--gradient);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+    .section-heading h2 {
+      margin: 13px 0;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2rem, 4vw, 3.1rem);
+      line-height: 1.1;
+      letter-spacing: -2px;
+    }
+    .section-heading p { margin: 0; color: var(--muted); line-height: 1.7; }
+
+    .about-section { background: var(--surface); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: .84fr 1.16fr;
+      align-items: center;
+      max-width: 1050px;
+      margin: auto;
+      gap: 64px;
+    }
+    .profile-image {
+      aspect-ratio: 1;
+      overflow: hidden;
+      border-radius: 30px;
+      background: var(--gradient);
+      box-shadow: var(--shadow);
+    }
+    .profile-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .about-copy h2 {
+      margin: 13px 0 16px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.9rem;
+      letter-spacing: -1px;
+    }
+    .about-copy > p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.9;
+    }
+    .notice {
+      display: flex;
+      gap: 9px;
+      margin: 20px 0;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      color: var(--muted);
+      background: #fff;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+    .notice strong { color: var(--text); }
+    .brand-list { display: grid; gap: 9px; }
+    .brand-row {
+      display: flex;
+      align-items: center;
+      min-height: 58px;
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      gap: 13px;
+    }
+    .brand-row img {
+      width: 100px;
+      height: 36px;
+      object-fit: contain;
+      object-position: left center;
+      mix-blend-mode: multiply;
+    }
+    .brand-row b { display: block; font-size: 13px; }
+    .brand-row small { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; }
+
+    .project-grid {
+      display: grid;
+      max-width: 1100px;
+      margin: auto;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+    .project-card {
+      position: relative;
+      display: block;
+      min-height: 295px;
+      overflow: hidden;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .project-card:hover {
+      box-shadow: var(--shadow);
+      transform: translateY(-6px);
+    }
+    .status {
+      position: absolute;
+      top: 25px;
+      right: 24px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      color: var(--muted);
+      background: var(--surface);
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .card-logo { width: 150px; height: 57px; margin-bottom: 16px; object-fit: contain; object-position: left center; mix-blend-mode: multiply; }
+    .card-icon { width: 57px; height: 57px; margin-bottom: 16px; object-fit: contain; }
+    .project-symbol { display: grid; width: 57px; height: 57px; margin-bottom: 16px; border-radius: 16px; background: var(--gradient); place-items: center; font-size: 25px; }
+    .project-card h3 { margin: 0 0 7px; font-size: 18px; }
+    .domain { margin-bottom: 12px; color: var(--blue); font-family: "Space Grotesk", sans-serif; font-size: 11px; font-weight: 600; }
+    .project-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.75; }
+    .card-arrow { position: absolute; right: 25px; bottom: 24px; display: grid; width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 50%; place-items: center; transition: transform .25s, color .25s, background .25s; }
+    .project-card:hover .card-arrow { color: #fff; background: var(--gradient); transform: rotate(45deg); }
+
+    footer { padding: 46px 20px calc(46px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--surface); text-align: center; }
+    .footer-logo { color: transparent; background: var(--gradient); font-family: "Space Grotesk", sans-serif; font-size: 22px; font-weight: 700; -webkit-background-clip: text; background-clip: text; }
+    .footer-subtitle { margin: 6px 0 14px; color: var(--muted); font-size: 12px; }
+    .footer-links { display: flex; justify-content: center; margin-bottom: 17px; gap: 20px; }
+    .footer-links a, footer p { color: var(--muted); font-size: 12px; }
+    footer p { margin: 0; }
+
+    .chat-launcher { position: fixed; z-index: 1500; right: max(22px, calc(18px + env(safe-area-inset-right))); bottom: max(22px, calc(18px + env(safe-area-inset-bottom))); width: 64px; height: 64px; padding: 8px; border-radius: 50%; background: var(--gradient); box-shadow: 0 13px 34px rgba(79, 125, 249, .36); cursor: pointer; }
+    .chat-launcher img { width: 100%; height: 100%; border-radius: 50%; background: #fff; object-fit: contain; }
+    .chat-overlay { position: fixed; z-index: 2000; inset: 0; display: flex; align-items: flex-end; justify-content: flex-end; padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); background: rgba(18, 20, 35, .28); backdrop-filter: blur(7px); opacity: 0; pointer-events: none; transition: opacity .25s; }
+    .chat-overlay.is-open { opacity: 1; pointer-events: auto; }
+    .chat { display: flex; width: min(400px, 100%); height: min(650px, calc(100svh - 32px)); flex-direction: column; overflow: hidden; border-radius: 24px; background: #fff; box-shadow: 0 30px 90px rgba(0, 0, 0, .25); transform: translateY(30px) scale(.96); transition: transform .3s; }
+    .chat-overlay.is-open .chat { transform: none; }
+    .chat-header { display: flex; align-items: center; padding: 15px 17px; color: #fff; background: var(--gradient); gap: 11px; }
+    .chat-header img { width: 39px; height: 39px; border-radius: 11px; background: #fff; object-fit: contain; }
+    .chat-header b { font-size: 14px; }.chat-header small { display: block; margin-top: 3px; font-size: 11px; opacity: .88; }
+    .chat-close { width: 32px; height: 32px; margin-left: auto; border-radius: 50%; color: #fff; background: rgba(255, 255, 255, .18); cursor: pointer; font-size: 18px; }
+    .chat-notice { display: flex; padding: 9px 15px; border-bottom: 1px solid #fce7b8; color: #8e620c; background: #fff7e6; font-size: 11px; line-height: 1.5; gap: 7px; }
+    .chat-notice b { height: max-content; padding: 3px 6px; border-radius: 7px; color: #fff; background: #f5a623; font-size: 10px; white-space: nowrap; }
+    .chat-messages { display: flex; min-height: 0; flex: 1; flex-direction: column; overflow-y: auto; padding: 16px; background: var(--surface); gap: 10px; }
+    .message { max-width: 86%; padding: 10px 13px; border-radius: 16px; font-size: 13px; line-height: 1.65; }.message.bot { align-self: flex-start; border: 1px solid var(--line); border-bottom-left-radius: 4px; background: #fff; }.message.user { align-self: flex-end; border-bottom-right-radius: 4px; color: #fff; background: var(--gradient); }
+    .quick-questions { display: flex; flex-wrap: wrap; padding: 0 14px 11px; background: var(--surface); gap: 7px; }.quick-questions button { padding: 7px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--text); background: #fff; cursor: pointer; font-size: 11px; }
+    .chat-form { display: flex; padding: 12px; border-top: 1px solid var(--line); background: #fff; gap: 9px; }.chat-form input { min-width: 0; flex: 1; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; outline: 0; background: var(--surface); color: var(--text); font-size: 13px; }.chat-form input:focus { border-color: var(--blue); }.chat-form button { width: 42px; border-radius: 12px; color: #fff; background: var(--gradient); cursor: pointer; font-size: 17px; }
+
+    @media (max-width: 820px) {
+      .site-header { height: 66px; padding: 0 18px; }.site-header.compact { height: 58px; }
+      .desktop-nav { display: none; }.menu-button { display: grid; place-items: center; }
+      .mobile-nav { position: fixed; z-index: 999; top: 66px; right: 12px; left: 12px; display: grid; padding: 10px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255, 255, 255, .97); box-shadow: var(--shadow); opacity: 0; pointer-events: none; transform: translateY(-9px); transition: opacity .22s, transform .22s; gap: 5px; }.mobile-nav.is-open { opacity: 1; pointer-events: auto; transform: none; }.mobile-nav a { padding: 13px; border-radius: 11px; color: var(--muted); font-size: 14px; font-weight: 700; }
+      section { padding: 90px 18px; }.about-grid, .project-grid { grid-template-columns: 1fr; }.about-grid { gap: 34px; }.profile-image { width: min(280px, 100%); margin: auto; }.project-card { min-height: 238px; }.hero-actions { flex-wrap: wrap; }.button { flex: 1; min-width: 145px; }.brand-row img { width: 90px; }.chat { width: 100%; height: min(680px, calc(100svh - 32px)); }
+    }
+    @media (max-width: 390px) { .brand-label { display: none; }.brand-row { gap: 9px; }.brand-row img { width: 78px; }.chat-notice { font-size: 10px; } }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; } }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+
+  <header class="site-header" id="header">
+    <a class="brand" href="#top" aria-label="oimo トップへ"><span class="brand-name">oimo</span><span class="brand-label">by ASRO</span></a>
+    <nav class="desktop-nav" aria-label="メインメニュー"><a href="#about">About</a><a href="#projects">Links</a><a href="#asra">AI</a></nav>
+    <button class="menu-button" id="menuButton" aria-label="メニューを開く" aria-expanded="false">☰</button>
+  </header>
+  <nav class="mobile-nav" id="mobileNav" aria-label="モバイルメニュー"><a href="#about">About</a><a href="#projects">Links</a><a href="#asra">AI / Asra</a></nav>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="hero-content">
+        <div class="eyebrow"><span class="eyebrow-dot"></span>Personal Site</div>
+        <h1><span class="gradient-text">OIMO</span></h1>
+        <div class="byline">by <img src="asro-logo.png" alt="ASRO"></div>
+        <p class="hero-description">Webサービス、AI、自宅サーバーを軸にものづくりをする個人開発者、oimoのポートフォリオサイトです。企画から実装、運用までを一人で手がけています。</p>
+        <div class="hero-actions"><a class="button primary" href="#projects">プロジェクトを見る</a><a class="button" href="#about">About</a></div>
+      </div>
+      <button class="scroll-cue" id="scrollCue">Scroll</button>
+    </section>
+
+    <section class="about-section" id="about">
+      <div class="about-grid">
+        <div class="profile-image"><img src="oimo-icon.png" alt="oimo のアイコン"></div>
+        <div class="about-copy">
+          <div class="section-label">About</div>
+          <h2>oimoについて</h2>
+          <p>Webサイト制作、AIチャットサービス、自宅サーバーの構築・運用など、技術を軸にしたものづくりを行っています。企画・設計から実装、運用まで一貫して取り組んでいます。</p>
+          <div class="notice"><span>🌱</span><span><strong>ASRO</strong>は2026年8月1日から名乗っている、oimoをトップとするグループの集約名です。会社ではなく、複数のサブブランドで活動するブランドです。</span></div>
+          <div class="brand-list">
+            <div class="brand-row"><img src="asro-ai-logo.png" alt="ASRO AI"><span><b>ASRO AI</b><small>AI開発 — Asraを開発中</small></span></div>
+            <div class="brand-row"><img src="asro-hub-logo.png" alt="ASRO Hub"><span><b>ASRO Hub</b><small>サイト・アプリ制作</small></span></div>
+            <div class="brand-row"><img src="asro-i-logo.png" alt="ASRO-i"><span><b>ASRO-i</b><small>インフラ</small></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="section-heading"><div class="section-label">Links</div><h2>Projects &amp; Sites</h2><p>oimoとASROグループが取り組むプロジェクトです。</p></div>
+      <div class="project-grid">
+        <a class="project-card" href="https://asro.jp" target="_blank" rel="noopener"><span class="status">外部サイト</span><img class="card-logo" src="asro-logo.png" alt="ASRO"><h3>ASRO</h3><div class="domain">asro.jp</div><p>oimoをトップとするグループ、ASROのホームページ。ASRO AI・ASRO Hub・ASRO-iを集約しています。</p><span class="card-arrow">→</span></a>
+        <article class="project-card" id="asra" role="button" tabindex="0" aria-label="Asraチャットを開く"><span class="status">開発中</span><img class="card-icon" src="asra-icon.png" alt="Asra"><h3>Asra</h3><div class="domain">by ASRO AI / Coming Soon</div><p>webRAGを活用し、CPUでも軽く動きながらハルシネーション低減を目指すAIアシスタントです。</p><span class="card-arrow">→</span></article>
+        <article class="project-card"><span class="status">構想中</span><div class="project-symbol">🌊</div><h3>防災 × AI サイト</h3><div class="domain">by ASRO Hub / Next Project</div><p>「明日のために何かをする」をテーマに、AIと防災を組み合わせた次世代サイト・アプリを構想中です。</p><span class="card-arrow">→</span></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-logo">oimo</div><div class="footer-subtitle">Personal site by ASRO</div>
+    <div class="footer-links"><a href="#top">Top</a><a href="#about">About</a><a href="#projects">Links</a><a href="https://asro.jp" target="_blank" rel="noopener">ASRO</a></div>
+    <p>© <span id="year"></span> oimo. All rights reserved.</p>
+  </footer>
+
+  <button class="chat-launcher" id="chatLauncher" aria-label="Asraを開く"><img src="asra-icon.png" alt=""></button>
+  <div class="chat-overlay" id="chatOverlay" role="dialog" aria-modal="true" aria-label="Asra チャット">
+    <section class="chat">
+      <div class="chat-header"><img src="asra-icon.png" alt="Asraのロゴ"><div><b>Asra</b><small>● by ASRO AI・開発中</small></div><button class="chat-close" id="chatClose" aria-label="Asraチャットを閉じる">×</button></div>
+      <div class="chat-notice"><b>お知らせ</b><span>Asraは開発中です。ASROについての簡単な質問に答えられます。</span></div>
+      <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
+      <div class="quick-questions" id="quickQuestions"><button data-question="ASROって何？">ASROって何？</button><button data-question="サブブランドを教えて">サブブランド</button><button data-question="Asraって何？">Asraって何？</button></div>
+      <form class="chat-form" id="chatForm"><input id="chatInput" placeholder="Asraに話しかけてみる…" autocomplete="off" aria-label="Asraへのメッセージ"><button aria-label="送信">➜</button></form>
+    </section>
+  </div>
+
+  <script>
+    const $ = (selector) => document.querySelector(selector);
+    const header = $('#header');
+    const progress = $('#progress');
+    const mobileNav = $('#mobileNav');
+    const menuButton = $('#menuButton');
+    const chatOverlay = $('#chatOverlay');
+    const chatLauncher = $('#chatLauncher');
+    const chatClose = $('#chatClose');
+    const chatMessages = $('#chatMessages');
+    const chatInput = $('#chatInput');
+    const chatForm = $('#chatForm');
+    let chatStarted = false;
+    let previousFocus = null;
+
+    $('#year').textContent = new Date().getFullYear();
+
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('compact', window.scrollY > 16);
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      progress.style.width = `${(window.scrollY / maxScroll) * 100}%`;
+    }, { passive: true });
+
+    menuButton.addEventListener('click', () => {
+      const open = mobileNav.classList.toggle('is-open');
+      menuButton.setAttribute('aria-expanded', String(open));
+      menuButton.textContent = open ? '×' : '☰';
+    });
+
+    mobileNav.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        mobileNav.classList.remove('is-open');
+        menuButton.setAttribute('aria-expanded', 'false');
+        menuButton.textContent = '☰';
+      });
+    });
+
+    $('#scrollCue').addEventListener('click', () => $('#about').scrollIntoView({ behavior: 'smooth' }));
+
+    const answers = [
+      { keys: ['サブブランド', '子ブランド'], text: 'ASROには3つのサブブランドがあります。AI開発のASRO AI、サイト・アプリ制作のASRO Hub、インフラのASRO-iです。' },
+      { keys: ['asro hub', 'asrohub'], text: 'ASRO Hubは、サイト・アプリ制作を担当するサブブランドです。oimoサイトや、防災とAIを組み合わせた次世代サイト・アプリを構想しています。' },
+      { keys: ['asro ai', 'asroai'], text: 'ASRO AIはAI開発を担当するサブブランドです。Asraを開発しており、軽く信頼できるAIを目指しています。' },
+      { keys: ['asro-i', 'asroi'], text: 'ASRO-iはインフラを担当するサブブランドです。サーバーやネットワークなど、サービスを支える基盤を扱います。' },
+      { keys: ['防災'], text: 'ASRO Hubが構想している、AIと防災を組み合わせた次世代サイト・アプリです。「明日のために何かをする」をテーマにしています。' },
+      { keys: ['asro', 'アスロ'], text: 'ASROは、oimoをトップとするグループの集約名です。ASRO AI、ASRO Hub、ASRO-iというサブブランドで活動しています。' },
+      { keys: ['asra', 'アスラ', '自己紹介', 'あなたは何'], text: '私はAsra。ASRO AIが開発しているAIアシスタントです。現在は開発中で、ASROについての簡単な質問に答えられます。' },
+      { keys: ['oimo', 'おいも', '誰が作った'], text: 'oimoはASROグループをまとめる個人開発者です。Webサイト、サーバー、AIサービスなどを企画・開発・運用しています。' },
+      { keys: ['こんにちは', 'はじめまして', 'こんばんは'], text: 'こんにちは、Asraです。気になることがあったら聞いてみてください。' },
+      { keys: ['ありがとう', 'thanks'], text: 'どういたしまして。またいつでも話しかけてください。' }
+    ];
+
+    function addMessage(text, type) {
+      const message = document.createElement('div');
+      message.className = `message ${type}`;
+      message.textContent = text;
+      chatMessages.appendChild(message);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function getAnswer(question) {
+      const normalized = question.toLowerCase();
+      const match = answers.find((item) => item.keys.some((key) => normalized.includes(key)));
+      return match ? match.text : 'ごめんなさい。まだ勉強中なので、その質問には答えられません。「ASROって何？」「サブブランド」「Asraって何？」などを聞いてみてください。';
+    }
+
+    function sendMessage(question) {
+      const text = question.trim();
+      if (!text) return;
+      addMessage(text, 'user');
+      chatInput.value = '';
+      window.setTimeout(() => addMessage(getAnswer(text), 'bot'), 350);
+    }
+
+    function openChat() {
+      previousFocus = document.activeElement;
+      chatOverlay.classList.add('is-open');
+      document.body.classList.add('is-locked');
+      if (!chatStarted) {
+        chatStarted = true;
+        addMessage('こんにちは。私はASRO AIのAsraです。ASROやAsraについて、簡単な質問に答えられます。', 'bot');
+      }
+      window.setTimeout(() => chatInput.focus(), 250);
+    }
+
+    function closeChat() {
+      chatOverlay.classList.remove('is-open');
+      document.body.classList.remove('is-locked');
+      if (previousFocus) previousFocus.focus();
+    }
+
+    chatLauncher.addEventListener('click', openChat);
+    $('#asra').addEventListener('click', openChat);
+    $('#asra').addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') openChat();
+    });
+    chatClose.addEventListener('click', closeChat);
+    chatOverlay.addEventListener('click', (event) => {
+      if (event.target === chatOverlay) closeChat();
+    });
+    chatForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      sendMessage(chatInput.value);
+    });
+    $('#quickQuestions').addEventListener('click', (event) => {
+      const question = event.target.dataset.question;
+      if (question) sendMessage(question);
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && chatOverlay.classList.contains('is-open')) closeChat();
+    });
+  </script>
+</body>
+</html>
